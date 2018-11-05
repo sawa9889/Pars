@@ -1,4 +1,4 @@
-package src;
+package Src;
 
 public class EducationPlan {
     //учебный план

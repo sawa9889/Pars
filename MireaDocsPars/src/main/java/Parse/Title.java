@@ -16,7 +16,7 @@ public class Title extends General
 
     public Title(){}
 
-    public String parse(String fileName) {
+    public ArrayList<ArrayList<String>> parse(String fileName) {
         //инициализируем потоки
         Integer i = 0;
         Integer j = 0;
@@ -105,8 +105,9 @@ public class Title extends General
         params.add(Direct);
         params.add(Stand);
 
-        Display(params);
-        return result;
+     //   Display(params);
+        //return params;
+        return null;
     }
 
     public void Display(ArrayList<ArrayList<String>> params) {

@@ -9,8 +9,8 @@
         <module name="MireaDocsPars" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="MireaDocsPars" target="1.5" />
+    <bytecodeTargetLevel target="8">
+      <module name="MireaDocsPars" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

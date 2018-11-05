@@ -1,5 +1,6 @@
 package Parse;
 
+import Src.Discipline;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
         import org.apache.poi.ss.usermodel.Cell;
         import org.apache.poi.ss.usermodel.Row;
@@ -8,19 +9,19 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
         import java.io.FileInputStream;
         import java.io.IOException;
         import java.io.InputStream;
-        import java.lang.reflect.Array;
-        import java.util.ArrayList;
+import java.util.ArrayList;
         import java.util.Iterator;
 
 public class Plan extends General{
 
     public Plan(){}
 
-    public String parse(String fileName) {
+    public ArrayList<Discipline> parse(String fileName) {
         //инициализируем потоки
         Integer i = 0;
         Integer j = 0;
         boolean bool = false;
+        ArrayList<Discipline> discArrList = new ArrayList<>();
 
         String result = "";
         InputStream inputStream = null;
@@ -124,13 +125,16 @@ public class Plan extends General{
                 }
 
             }
-            if (bool)
-                Display(indexes);
+            if (bool) {
+           //     Display(indexes);
+                discArrList.add(new Discipline(indexes));
+            }
             result += "\n";
-        }
 
-        return result;
+        }
+        return discArrList;
     }
+
 
     public void Display(ArrayList<ArrayList<String>> indexes) {
         System.out.println();

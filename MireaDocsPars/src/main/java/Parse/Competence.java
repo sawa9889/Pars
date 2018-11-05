@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Competence extends General{
-    public String parse(String fileName) {
+
+    public ArrayList<Src.Competence> parse(String fileName) {
         //инициализируем потоки
         Integer i = 0;
         Integer j = 0;
@@ -21,6 +22,7 @@ public class Competence extends General{
         String result = "";
         ArrayList<String> point = new ArrayList<String>();   // Первая запись - компетенция, последующие - дисциплины в ней
         ArrayList<ArrayList<String>> Competences = new ArrayList();
+        ArrayList<Src.Competence> returnedArray = new ArrayList<>();
 
         InputStream inputStream = null;
         HSSFWorkbook workBook = null;
@@ -64,6 +66,12 @@ public class Competence extends General{
                         switch (j) {
                             case 3:
                                 Name += get(cell) + " ";
+                                point.add(Name);
+                                Name = "";
+                                cell = cells.next();
+                                cell = cells.next();
+                                Name += get(cell) + " ";
+                                point.add(Name);
                                 break;
                             case 5:
                                 Name += get(cell) + " ";
@@ -74,6 +82,8 @@ public class Competence extends General{
                         switch (j) {
                             case 4:
                                 Name += get(cell) + " ";
+                                point.add(Name);
+                                Name = "";
                                 break;
                             case 6:
                                 Name += get(cell) + " ";
@@ -85,9 +95,13 @@ public class Competence extends General{
 
             }
         }
-        Display(Competences);
-        return result;
+        //Display(Competences);
+        for (int i1 = 0; i1 < Competences.size(); i1++) {
+            returnedArray.add(new Src.Competence(Competences.get(i1)));
+        }
+        return returnedArray;
     }
+
 
     public  void Display(ArrayList<ArrayList<String>> indexes) {
         System.out.println();
