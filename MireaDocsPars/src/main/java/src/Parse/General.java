@@ -1,3 +1,5 @@
+package Parse;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -58,6 +60,7 @@ public abstract class General {
             Row row = it.next();
             Iterator<Cell> cells = row.iterator();
             i++;
+            result += i+"\n";
             j=0;
             while (cells.hasNext()) {
                 Cell cell = cells.next();

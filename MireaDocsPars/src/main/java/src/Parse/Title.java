@@ -1,3 +1,5 @@
+package Parse;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -66,7 +68,7 @@ public class Title extends General
                     case 17:
                         if (j==2){
                             String name = get(cell);
-                            Direct.add(name.substring(name.lastIndexOf(Direct.get(0))));
+                            Direct.add(name.substring(name.lastIndexOf(Direct.get(0))==-1? 0:name.lastIndexOf(Direct.get(0))));
                             indexes.add(Direct);
                         }
                         break;
