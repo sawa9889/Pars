@@ -64,11 +64,14 @@ public class Competence extends General{
                         switch (j) {
                             case 3:
                                 Name += get(cell) + " ";
-                                break;
-                            case 5:
+                                point.add(Name);
+                                Name = "";
+                                cell = cells.next();
+                                cell = cells.next();
                                 Name += get(cell) + " ";
                                 point.add(Name);
                                 break;
+
                         }
                     } else {
                         switch (j) {

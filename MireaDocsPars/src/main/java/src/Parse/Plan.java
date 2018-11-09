@@ -45,6 +45,7 @@ public class Plan extends General{
             ArrayList<String> Hours_total = new ArrayList<String>();
             ArrayList<String> Hours = new ArrayList<String>();
             ArrayList<String> Hours_temp;
+            ArrayList<String> Kaf = new ArrayList<String>();
             bool = false;
             j=0;
             while (cells.hasNext()) {
@@ -120,11 +121,18 @@ public class Plan extends General{
                             get_arr(indexes,cell,cells,"8 семестр");
                             j+=7;
                             break;
+                        case 110:
+                            Kaf.add(" Номер кафедры "+get(cell));
+                            break;
+                        case 111:
+                            Kaf.add(" Кафедра "+get(cell));
+                            indexes.add(Kaf);
+                            break;
                     }
                 }
 
             }
-            if (bool)
+            if (bool && !Kaf.get(1).equals(" Кафедра 0.0"))
                 Display(indexes);
             result += "\n";
         }
