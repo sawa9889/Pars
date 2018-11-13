@@ -1,15 +1,18 @@
 package Src;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class EducationPlan {
     //учебный план
     private String name;
-    private String startDate;
-    private String edPlanCreateDate;
+    private Date startDate;
+    private Date edPlanCreateDate;
     //стандарт
     private int standartId;
-    private String standartCreateDate;
+    private Date standartCreateDate;
     private int standartOrder;
     private String pathToStandart = null;
     //направление
@@ -19,19 +22,70 @@ public class EducationPlan {
     private String profName;
 
 
+    public String getName() {
+        return name;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEdPlanCreateDate() {
+        return edPlanCreateDate;
+    }
+
+    public int getStandartId() {
+        return standartId;
+    }
+
+    public Date getStandartCreateDate() {
+        return standartCreateDate;
+    }
+
+    public int getStandartOrder() {
+        return standartOrder;
+    }
+
+    public String getPathToStandart() {
+        return pathToStandart;
+    }
+
+    public String getDirEncr() {
+        return dirEncr;
+    }
+
+    public String getDirName() {
+        return dirName;
+    }
+
+    public String getProfName() {
+        return profName;
+    }
+
     public EducationPlan(ArrayList<ArrayList<String>> rawData) {
         name = rawData.get(0).get(1).replace(".xls", "")
                 .split("Название плана")[1].trim();
-        startDate = rawData.get(0).get(0).split("Год начала обучения")[1].trim();
-
+        try {
+            startDate = new Date( new SimpleDateFormat("yyyy").parse(rawData.get(0).get(0).split("Год начала обучения")[1].trim()).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         standartId = Integer.parseInt(
                 rawData.get(3).get(1).replace("Номер стандарта", "").trim());
 
         String [] orderRaw = rawData.get(3).get(0).split("от");
         standartOrder = Integer.parseInt(orderRaw[0].replace("Приказ", "").trim());
-        edPlanCreateDate = orderRaw[1].trim();
+        try {
+            edPlanCreateDate = new Date( new SimpleDateFormat("dd.mm.yyyy").parse(orderRaw[1].trim()).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        standartCreateDate = rawData.get(3).get(2).replace("Дата", "").trim();
+        try {
+            standartCreateDate = new Date( new SimpleDateFormat("dd.mm.yyyy").parse(rawData.get(3).get(2).replace("Дата", "").trim()).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         dirName = rawData.get(2).get(1).replaceAll("\"", "")
                 .replace("Направление:", "").trim();

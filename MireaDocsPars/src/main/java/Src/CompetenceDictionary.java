@@ -1,8 +1,8 @@
 package Src;
 
 public class CompetenceDictionary {
-    String dictionaryId;
-    String dictionaryName;
+    private String dictionaryId;
+    private String dictionaryName;
 
     public String getDictionaryId() {
         return dictionaryId;
