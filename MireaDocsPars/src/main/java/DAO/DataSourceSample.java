@@ -23,8 +23,10 @@ package DAO;
  */
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Properties;
 
+import Src.EducationPlan;
 import oracle.jdbc.pool.OracleDataSource;
 import oracle.jdbc.OracleConnection;
 import java.sql.DatabaseMetaData;
@@ -74,6 +76,29 @@ public class DataSourceSample {
             System.out.println("Database Username is: " + connection.getUserName());
             System.out.println();
             // Perform a database operation
+
+    }
+    private void closeDBConnection (){
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void addEducationPlan (EducationPlan educationPlan) {
+        Executor ex = new Executor();
+        try {
+            ex.addEducationPlan(connection, educationPlan);
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            closeDBConnection();
+        }
+        closeDBConnection();
 
     }
 }
