@@ -24,9 +24,10 @@ package DAO;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Properties;
 
-import Src.EducationPlan;
+import Src.*;
 import oracle.jdbc.pool.OracleDataSource;
 import oracle.jdbc.OracleConnection;
 import java.sql.DatabaseMetaData;
@@ -40,6 +41,7 @@ public class DataSourceSample {
     private final static String DB_USER = "MIREA_DOCS";
     private final static String DB_PASSWORD = "pass";
     private OracleConnection connection;
+    private Executor ex;
 
     /*
      * The method gets a database connection using
@@ -64,41 +66,63 @@ public class DataSourceSample {
         ods.setURL(DB_URL);
         ods.setConnectionProperties(info);
 
-            connection = (OracleConnection) ods.getConnection();
+        connection = (OracleConnection) ods.getConnection();
+        connection.setAutoCommit(false);
+        // Get the JDBC driver name and version
+        DatabaseMetaData dbmd = connection.getMetaData();
+        System.out.println("Driver Name: " + dbmd.getDriverName());
+        System.out.println("Driver Version: " + dbmd.getDriverVersion());
+        // Print some connection properties
+        System.out.println("Default Row Prefetch Value is: " +
+                connection.getDefaultRowPrefetch());
+        System.out.println("Database Username is: " + connection.getUserName());
+        System.out.println();
+        // Perform a database operation
 
-            // Get the JDBC driver name and version
-            DatabaseMetaData dbmd = connection.getMetaData();
-            System.out.println("Driver Name: " + dbmd.getDriverName());
-            System.out.println("Driver Version: " + dbmd.getDriverVersion());
-            // Print some connection properties
-            System.out.println("Default Row Prefetch Value is: " +
-                    connection.getDefaultRowPrefetch());
-            System.out.println("Database Username is: " + connection.getUserName());
-            System.out.println();
-            // Perform a database operation
-
+        ex = new Executor();
     }
-    private void closeDBConnection (){
+    private void closeDBConnection () {
         try {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public void addEducationPlan (EducationPlan educationPlan) {
-        Executor ex = new Executor();
+
+    public void addNewPlan(EducationPlan processedEdPlan, ArrayList<Discipline> processedDisciplineArray, ArrayList<Competence> processedCompetenceArray) throws SQLException {
+        /* Строгий сценарий добавления данных в таблицы */
         try {
-            ex.addEducationPlan(connection, educationPlan);
-        } catch (SQLException | ParseException e) {
-            e.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
+            Integer profileId, edPlanId, compId, discId, depId, hoursId;
+            ex.addDirection(connection, processedEdPlan);
+            profileId = ex.addProfile(connection, processedEdPlan);
+            ex.addStandart(connection, processedEdPlan);
+            edPlanId = ex.addEducationPlan(connection, processedEdPlan, profileId);
+            for (Competence competence : processedCompetenceArray) {
+                compId = ex.addCompetence(connection, competence);
+                ex.addPlan2Comp(connection, edPlanId, compId);
+                for (CompetenceDictionary competenceDictionary : competence.getCompetenceDictArr()) {
+                    for (Discipline discipline : processedDisciplineArray) {
+                        if (discipline.getDisciplineName().equals(competenceDictionary.getDictionaryName())) {
+                            discId = ex.addDiscipline(connection, discipline);
+                            depId = ex.addDepartment(connection, discipline);
+                            ex.addDep2Disc(connection, depId, discId);
+                            ex.addDisc2Comp(connection, discId, compId, competenceDictionary.getDictionaryId());
+                            ex.addPlan2Disc(connection, edPlanId, discId);
+                            for (Hours hour : discipline.getHours()) {
+                                hoursId = ex.addHours(connection, hour);
+                                ex.addHours2Disc(connection, hoursId, discId);
+                                ex.addHours2Comp(connection, hoursId, compId);
+
+                            }
+                        }
+                    }
+                }
             }
+            connection.commit();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+            connection.rollback();
             closeDBConnection();
         }
-        closeDBConnection();
-
     }
 }
