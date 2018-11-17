@@ -3,6 +3,7 @@ package Src;
 import java.util.ArrayList;
 
 public class Competence {
+    private Integer competenceId;
     private String competenceName;
     private String competenceDescr;
     private ArrayList <CompetenceDictionary> competenceDictArr = new ArrayList<>();
@@ -14,6 +15,14 @@ public class Competence {
             competenceDictArr.add(new CompetenceDictionary(rawData.get(i).trim(),
                     rawData.get(++i).trim()));
         }
+    }
+
+    public Integer getCompetenceId() {
+        return competenceId;
+    }
+
+    public void setCompetenceId(Integer competenceId) {
+        this.competenceId = competenceId;
     }
 
     public ArrayList<CompetenceDictionary> getCompetenceDictArr() {

@@ -3,6 +3,7 @@ package Src;
 import java.util.ArrayList;
 
 public class Discipline {
+    private Integer disciplineId;
     private String disciplineName;
     private Integer depNumber;
     private String depName;
@@ -23,6 +24,22 @@ public class Discipline {
         }
     }
 
+    public Integer getDepNumber() {
+
+        return depNumber;
+    }
+
+    public String getDepName() {
+        return depName;
+    }
+
+    public Integer getDisciplineId() {
+        return disciplineId;
+    }
+
+    public void setDisciplineId(Integer disciplineId) {
+        this.disciplineId = disciplineId;
+    }
 
     public String getDisciplineName() { return disciplineName; }
 
