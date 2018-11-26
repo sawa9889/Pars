@@ -1,7 +1,4 @@
 import DAO.DataSourceSample;
-import Parse.Competence;
-import Parse.Plan;
-import Parse.Title;
 import Src.Discipline;
 import Src.EducationPlan;
 
