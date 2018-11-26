@@ -2,25 +2,68 @@ package Parse;
 
 import Src.Discipline;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-        import org.apache.poi.ss.usermodel.Cell;
-        import org.apache.poi.ss.usermodel.Row;
-        import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
-        import java.io.FileInputStream;
-        import java.io.IOException;
-        import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-        import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Plan extends General{
+
+    private HashMap<Integer,String> HOURS_TOTAL_INDEXES= new HashMap<Integer, String>() {{
+        put(10,"По ЗЕТ ");
+        put(12," Часов в з.е. ");
+        put(13," Итог: экспертное  ");
+        put(15," Контакт часы ");
+        put(16," СР ");
+        put(17," Контроль ");
+    }};
+
+    private HashMap<Integer,String>  EXAMS_INDEXES = new HashMap<Integer, String>() {{
+        put(4,"Экзамены :");
+        put(5,"Зачеты :");
+        put(6,"Зачеты с оценкой :");
+        put(7,"Курсовые проекты :");
+        put(8,"Курсовые работы :");
+        put(9,"Реферат :");
+    }};
+
+    private HashMap<Integer,String>  HOURS_PLAN_INDEXES = new HashMap<Integer, String>() {{
+        put(26,"1 семестр");
+        put(34,"2 семестр");
+        put(45,"3 семестр");
+        put(53,"4 семестр");
+        put(64,"5 семестр");
+        put(72,"6 семестр");
+        put(83,"7 семестр");
+        put(91,"8 семестр");
+    }};
+    private Integer HOURS_PLAN_SIZE = 7;
+
+    private Integer i = 0;
+    private Integer j = 0;
+    private boolean bool1 = false;
+    private boolean bool2 = false;
+
+    ArrayList<ArrayList<String>> indexes = new ArrayList();
+    ArrayList<String> Name = new ArrayList<String>();
+    ArrayList<String> Exams = new ArrayList<String>();
+    ArrayList<String> Hours_total = new ArrayList<String>();
+    ArrayList<String> Hours = new ArrayList<String>();
+    ArrayList<String> Kaf = new ArrayList<String>();
+    ArrayList<String> Stroka;
 
     public Plan(){}
 
     public ArrayList<Discipline> parse(String fileName) {
         //инициализируем потоки
-        Integer i = 0;
-        Integer j = 0;
-        boolean bool = false;
         ArrayList<Discipline> discArrList = new ArrayList<>();
 
         String result = "";
@@ -39,105 +82,51 @@ public class Plan extends General{
         while (it.hasNext()) {
             Row row = it.next();
             Iterator<Cell> cells = row.iterator();
-            i++;
-            ArrayList<ArrayList<String>> indexes = new ArrayList();
-            ArrayList<String> Name = new ArrayList<String>();
-            ArrayList<String> Exams = new ArrayList<String>();
-            ArrayList<String> Hours_total = new ArrayList<String>();
-            ArrayList<String> Hours = new ArrayList<String>();
-            ArrayList<String> Hours_temp;
-            ArrayList<String> Kaf = new ArrayList<String>();
-            bool = false;
+            bool1 = false;
             j=0;
+            indexes = new ArrayList();
+            Name = new ArrayList<String>();
+            Exams = new ArrayList<String>();
+            Hours_total = new ArrayList<String>();
+            Hours = new ArrayList<String>();
+            Kaf = new ArrayList<String>();
+
+            Stroka = new ArrayList<String>();
+            int j = 0;
             while (cells.hasNext()) {
                 Cell cell = cells.next();
-                j++;
-                try {
-                    if (j == 2 && get(cell).equals("1")) {
-                        bool = true;
-                    }
-                }catch(IllegalStateException e){
-
+                Stroka.add(get(cell));
+            }
+            if (Stroka.size()>5) {
+                if (Stroka.get(1).equals("1")) {
+                    bool1 = true;
                 }
+                if (bool1) {
 
-                if (bool){
-                    switch (j){
-                        case 4:
-                            Name.add(get(cell));
-                            indexes.add(Name);
-                            break;
-                        case 7:
-                            Exams.add("Экзамены :"+get(cell));
-                            break;
-                        case 8:Exams.add(" Зачеты :"+get(cell));
-                            break;
-                        case 9:Exams.add(" Зачеты с оценкой :"+get(cell));
-                            break;
-                        case 10:Exams.add(" Курсовые проекты :"+get(cell));
-                            break;
-                        case 11:Exams.add(" Курсовые работы :"+get(cell));
-                            indexes.add(Exams);
-                            break;
-                        case 12:
-                            Hours_total.add("По ЗЕТ "+get(cell));
-                            break;
-                        case 14:Hours_total.add(" Контакт. раб "+get(cell));
-                            break;
-                        case 19:Hours_total.add(" СРС "+get(cell));
-                            break;
-                        case 20:Hours_total.add(" Контроль "+get(cell));
-                            break;
-                        case 21:Hours_total.add(" Экспертное "+get(cell));
-                            indexes.add(Hours_total);
-                            break;
-                        case 27:
-                            get_arr(indexes,cell,cells,"1 семестр");
-                            j+=7;
-                            break;
-                        case 35:
-                            get_arr(indexes,cell,cells,"2 семестр");
-                            j+=7;
-                            break;
-                        case 46:
-                            get_arr(indexes,cell,cells,"3 семестр");
-                            j+=7;
-                            break;
-                        case 54:
-                            get_arr(indexes,cell,cells,"4 семестр");
-                            j+=7;
-                            break;
-                        case 65:
-                            get_arr(indexes,cell,cells,"5 семестр");
-                            j+=7;
-                            break;
-                        case 73:
-                            get_arr(indexes,cell,cells,"6 семестр");
-                            j+=7;
-                            break;
-                        case 84:
-                            get_arr(indexes,cell,cells,"7 семестр");
-                            j+=7;
-                            break;
-                        case 92:
-                            get_arr(indexes,cell,cells,"8 семестр");
-                            j+=7;
-                            break;
-                        case 111:
-                            Kaf.add(" Номер кафедры "+get(cell));
-                            break;
-                        case 112:
-                            Kaf.add(" Кафедра "+get(cell));
-                            indexes.add(Kaf);
-                            break;
+                    Name.add(Stroka.get(2));
+                    Name.add(Stroka.get(3));
+                    indexes.add(Name);
+                    for (Integer i : EXAMS_INDEXES.keySet())
+                        Exams.add(EXAMS_INDEXES.get(i) + Stroka.get(i));
+                    indexes.add(Exams);
+                    for (Integer i : HOURS_TOTAL_INDEXES.keySet())
+                        Hours_total.add(HOURS_TOTAL_INDEXES.get(i) + Stroka.get(i));
+                    indexes.add(Hours_total);
+
+                    for (Integer i : HOURS_PLAN_INDEXES.keySet())
+                        get_arr(indexes, Stroka, i, i + HOURS_PLAN_SIZE, HOURS_PLAN_INDEXES.get(i));
+
+                    Kaf.add(" Номер кафедры " + Stroka.get(Stroka.size() - 3));
+                    Kaf.add(" Кафедра " + Stroka.get(Stroka.size() - 2));
+                    indexes.add(Kaf);
+
+                    if (bool1 && !(Kaf.get(0).contains(" 0.0") && Kaf.get(1).contains("0.0"))) {
+//                        Display(indexes);
+                        discArrList.add(new Discipline(indexes));
+//                        System.out.println('b');
                     }
                 }
-
             }
-            if (bool && !Kaf.get(1).equals(" Кафедра 0.0")) {
-           //     Display(indexes);
-                discArrList.add(new Discipline(indexes));
-            }
-            result += "\n";
 
         }
         return discArrList;
@@ -154,25 +143,27 @@ public class Plan extends General{
         }
     }
 
-    public void get_arr(ArrayList<ArrayList<String>> indexes,Cell cell,Iterator<Cell> cells,String name) {
-        int cellType = cell.getCellType();
+    public void get_arr(ArrayList<ArrayList<String>> indexes, ArrayList<String> Stroka, Integer beginIndex, Integer EndIndex,String name) {
+
         ArrayList<String> Hours_temp = new ArrayList<String>();
         for (int i =0;i<indexes.get(1).size();i++){
-            if (indexes.get(1).get(i).contains(name.substring(0,1))) name+=" "+indexes.get(1).get(i).substring(0,indexes.get(1).get(i).indexOf(':'));
-                    else
-                if (indexes.get(1).get(i).contains("-")){
-                    int x = indexes.get(1).get(i).indexOf('-');
-                    Integer res_1 = Integer.parseInt(indexes.get(1).get(i).substring(x-1,x) );
-                    Integer res_2 = Integer.parseInt(indexes.get(1).get(i).substring(x+1,x+2) );
-                    if (Integer.parseInt(name.substring(0,1))<res_2 && Integer.parseInt(name.substring(0,1))>res_1)
-                        name+=" "+indexes.get(1).get(i).substring(0,indexes.get(1).get(i).indexOf(':'));
-                }
+            String FormOFControl = indexes.get(1).get(i);
+            //System.out.println(FormOFControl);
+            if (FormOFControl.contains(name.substring(0,1))) name+=" "+FormOFControl.substring(0,FormOFControl.indexOf(':'));
+            else
+            if (FormOFControl.contains("-")){
+                int x = FormOFControl.indexOf('-');
+
+                Integer res_1 = Integer.parseInt(FormOFControl.substring(x-1,x) );
+                Integer res_2 = Integer.parseInt(FormOFControl.substring(x+1,x+2) );
+                if (Integer.parseInt(name.substring(0,1))<res_2 && Integer.parseInt(name.substring(0,1))>res_1)
+                    name+=" "+FormOFControl.substring(0,FormOFControl.indexOf(':'));
+            }
         }
+
         Hours_temp.add(name);
-        for (int x = 0; x < 7; x++) {
-            Hours_temp.add(get(cell));
-            cell = cells.next();
-            cellType = cell.getCellType();
+        for (int x = beginIndex; x < EndIndex; x++) {
+            Hours_temp.add(Stroka.get(x));
         }
         if (!Hours_temp.get(6).equals("0.0"))
             indexes.add(Hours_temp);

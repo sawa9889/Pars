@@ -81,9 +81,11 @@ public class DataSourceSample {
 
         ex = new Executor();
     }
-    private void closeDBConnection () {
+    public void closeDBConnection () {
         try {
-            connection.close();
+            if (!connection.isClosed()) {
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,7 +124,15 @@ public class DataSourceSample {
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
             connection.rollback();
-            closeDBConnection();
+        }
+    }
+    public void deleteEdplan (String edPlanName) throws SQLException {
+        try {
+            ex.deleteEdPlan(connection, edPlanName);
+            connection.commit();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+            connection.rollback();
         }
     }
 }

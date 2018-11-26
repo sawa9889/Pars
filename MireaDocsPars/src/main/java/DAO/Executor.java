@@ -164,6 +164,14 @@ public class Executor {
         addHours2DiscCall.execute();
         addHours2DiscCall.close();
     }
+    void deleteEdPlan (OracleConnection connection, String edPlanName) throws SQLException{
+        final String deleteEdPlan = "call mirea_docs.mirea_pars_pack.delete_education_plan(?)";
+        CallableStatement deleteEdPlanCall = connection.prepareCall(deleteEdPlan);
+        deleteEdPlanCall.setString("in_ed_plan_name", edPlanName);
+        deleteEdPlanCall.execute();
+        deleteEdPlanCall.close();
+
+    }
 
 
 
