@@ -1,6 +1,7 @@
 package Parse;
 
 import Src.Discipline;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -9,11 +10,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class Plan extends General{
 
@@ -62,7 +62,8 @@ public class Plan extends General{
 
     public Plan(){}
 
-    public ArrayList<Discipline> parse(String fileName) {
+    public ArrayList<Discipline> parse(String fileName) throws SQLException {
+        Logger log = Logger.getLogger(Plan.class);
         //инициализируем потоки
         ArrayList<Discipline> discArrList = new ArrayList<>();
 
@@ -70,10 +71,10 @@ public class Plan extends General{
         InputStream inputStream = null;
         HSSFWorkbook workBook = null;
         try {
-            inputStream = new FileInputStream(fileName);
-            workBook = new HSSFWorkbook(inputStream);
+            workBook = new HSSFWorkbook(new FileInputStream(fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getLocalizedMessage());
+            throw new SQLException("Не найдено файла");
         }
 
         Sheet sheet = workBook.getSheetAt(3);
@@ -120,8 +121,8 @@ public class Plan extends General{
                     Kaf.add(" Кафедра " + Stroka.get(Stroka.size() - 2));
                     indexes.add(Kaf);
 
-                    if (bool1 && !(Kaf.get(0).contains(" 0.0") && Kaf.get(1).contains("0.0"))) {
-//                        Display(indexes);
+                    if (bool1 && !(Kaf.get(0).contains(" 0.0") && Kaf.get(1).contains(" 0.0"))) {
+                        //Display(indexes);
                         discArrList.add(new Discipline(indexes));
 //                        System.out.println('b');
                     }

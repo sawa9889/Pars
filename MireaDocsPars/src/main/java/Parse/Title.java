@@ -1,6 +1,7 @@
 package Parse;
 
 import Src.EducationPlan;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -18,7 +20,8 @@ public class Title extends General
 
     public Title(){}
 
-    public EducationPlan parse(String fileName) {
+    public EducationPlan parse(String fileName) throws SQLException {
+        Logger log = Logger.getLogger(Plan.class);
         //инициализируем потоки
         Integer i = 0;
         Integer j = 0;
@@ -30,15 +33,13 @@ public class Title extends General
         ArrayList<String> Stand = new ArrayList<String>();
 
 
-        String result = "";
-        InputStream inputStream = null;
         HSSFWorkbook workBook = null;
         File parsFile = new File(fileName);
         try {
-            inputStream = new FileInputStream(fileName);
-            workBook = new HSSFWorkbook(inputStream);
+            workBook = new HSSFWorkbook(new FileInputStream(fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getLocalizedMessage());
+            throw new SQLException("Не найдено файла");
         }
 
         Sheet sheet = workBook.getSheetAt(0);
@@ -110,7 +111,7 @@ public class Title extends General
 
      //   Display(params);
         //return params;
-        return new Src.EducationPlan(params);
+        return new EducationPlan(params);
     }
 
     public void Display(ArrayList<ArrayList<String>> params) {

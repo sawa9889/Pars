@@ -35,13 +35,13 @@ import java.sql.DatabaseMetaData;
 public class DataSourceSample {
     // The recommended format of a connection URL is the long format with the
     // connection descriptor.
-    private final static String DB_URL= "jdbc:oracle:thin:@37.46.128.241:1521/xe";
+    private final static String DB_URL= "jdbc:oracle:thin:@37.46.128.241:1521/XE";
     // For ATP and ADW - use the TNS Alias name along with the TNS_ADMIN
     // final static String DB_URL="jdbc:oracle:thin:@myhost:1521@wallet_dbname?TNS_ADMIN=/Users/test/wallet_dbname";
     private final static String DB_USER = "MIREA_DOCS";
     private final static String DB_PASSWORD = "pass";
     private OracleConnection connection;
-    private Executor ex;
+    private DAO.Executor ex;
 
     /*
      * The method gets a database connection using
@@ -79,7 +79,7 @@ public class DataSourceSample {
         System.out.println();
         // Perform a database operation
 
-        ex = new Executor();
+        ex = new DAO.Executor();
     }
     public void closeDBConnection () {
         try {
@@ -91,7 +91,7 @@ public class DataSourceSample {
         }
     }
 
-    public void addNewPlan(EducationPlan processedEdPlan, ArrayList<Discipline> processedDisciplineArray, ArrayList<Competence> processedCompetenceArray) throws SQLException {
+    public void addNewPlan(Src.EducationPlan processedEdPlan, ArrayList<Src.Discipline> processedDisciplineArray, ArrayList<Competence> processedCompetenceArray) throws SQLException {
         /* Строгий сценарий добавления данных в таблицы */
         try {
             Integer profileId, edPlanId, compId, discId, depId, hoursId;
@@ -103,14 +103,14 @@ public class DataSourceSample {
                 compId = ex.addCompetence(connection, competence);
                 ex.addPlan2Comp(connection, edPlanId, compId);
                 for (CompetenceDictionary competenceDictionary : competence.getCompetenceDictArr()) {
-                    for (Discipline discipline : processedDisciplineArray) {
+                    for (Src.Discipline discipline : processedDisciplineArray) {
                         if (discipline.getDisciplineName().equals(competenceDictionary.getDictionaryName())) {
                             discId = ex.addDiscipline(connection, discipline);
                             depId = ex.addDepartment(connection, discipline);
                             ex.addDep2Disc(connection, depId, discId);
                             ex.addDisc2Comp(connection, discId, compId, competenceDictionary.getDictionaryId());
                             ex.addPlan2Disc(connection, edPlanId, discId);
-                            for (Hours hour : discipline.getHours()) {
+                            for (Src.Hours hour : discipline.getHours()) {
                                 hoursId = ex.addHours(connection, hour);
                                 ex.addHours2Disc(connection, hoursId, discId);
                                 ex.addHours2Comp(connection, hoursId, compId);

@@ -10,7 +10,7 @@ public class Discipline {
     private ArrayList<Hours> hours = new ArrayList<>();
 
     public Discipline(ArrayList<ArrayList<String>> rawData) {
-        disciplineName = rawData.get(0).get(0);
+        disciplineName = rawData.get(0).get(0)+' '+rawData.get(0).get(1);
         depNumber = (int) Double.parseDouble(rawData.get(rawData.size()-1).get(0).replace("Номер кафедры", "").trim());
         depName = rawData.get(rawData.size()-1).get(1);
         for (int i = 3; i < rawData.size()-1; i++) {
@@ -21,6 +21,22 @@ public class Discipline {
                     (int) Double.parseDouble(rawData.get(i).get(6)),(int) Double.parseDouble(rawData.get(i).get(7)),
                     //или экзамен, или зачет
                     isExam, !isExam));
+        }
+    }
+
+    public void Display(){
+        System.out.println(disciplineName);
+        System.out.println(depNumber +' '+ depName);
+        for (Hours h:hours){
+            System.out.println(h.getControl() + ' ' +
+                    h.getKsr() + " , " +
+                    h.getLab() + " , " +
+                    h.getLectures() + " , " +
+                    h.getPractice() + " , "+
+                    h.getSemestr() + " , " +
+                    h.getSrs() + " , " +
+                    h.isEcz() + " , " +
+                    h.isZachet());
         }
     }
 

@@ -1,5 +1,6 @@
 package Parse;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -8,12 +9,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Competence extends General{
 
-    public ArrayList<Src.Competence> parse(String fileName) {
+    public ArrayList<Src.Competence> parse(String fileName) throws SQLException {
+        Logger log = Logger.getLogger(Plan.class);
         //инициализируем потоки
         Integer i = 0;
         Integer j = 0;
@@ -27,10 +30,10 @@ public class Competence extends General{
         InputStream inputStream = null;
         HSSFWorkbook workBook = null;
         try {
-            inputStream = new FileInputStream(fileName);
-            workBook = new HSSFWorkbook(inputStream);
+            workBook = new HSSFWorkbook(new FileInputStream(fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getLocalizedMessage());
+            throw new SQLException("Не найдено файла");
         }
 
         Sheet sheet = workBook.getSheetAt(4);
