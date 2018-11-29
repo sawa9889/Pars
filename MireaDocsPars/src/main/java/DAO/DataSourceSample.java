@@ -30,6 +30,8 @@ import java.util.Properties;
 import Src.*;
 import oracle.jdbc.pool.OracleDataSource;
 import oracle.jdbc.OracleConnection;
+import org.apache.log4j.Logger;
+
 import java.sql.DatabaseMetaData;
 
 public class DataSourceSample {
@@ -94,6 +96,7 @@ public class DataSourceSample {
     public void addNewPlan(Src.EducationPlan processedEdPlan, ArrayList<Src.Discipline> processedDisciplineArray, ArrayList<Competence> processedCompetenceArray) throws SQLException {
         /* Строгий сценарий добавления данных в таблицы */
         try {
+            Logger log = Logger.getLogger(Discipline.class);
             Integer profileId, edPlanId, compId, discId, depId, hoursId;
             ex.addDirection(connection, processedEdPlan);
             profileId = ex.addProfile(connection, processedEdPlan);

@@ -6,6 +6,7 @@ import Src.Discipline;
 import Src.EducationPlan;
 import Threads.ThreadDelete;
 import Threads.ThreadParse;
+import Threads.ThreadUpdate;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -19,13 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    public Scanner in;
-    public int action;
+    private Scanner in;
+    private int action;
     public String path;
-    public boolean exit;
+    private boolean exit;
     public Logger log;
 
-    Main() {
+    private Main() {
         exit = false;
         in = new Scanner(System.in);
         log = Logger.getLogger(Main.class);
@@ -52,7 +53,9 @@ public class Main {
         System.out.println("4) Удалить планы в папке из базы");
         System.out.println("5) Сказать что вы молодец ");
         System.out.println("6) Посмотреть файлы в папке ");
-        System.out.println("exit (7) - Выход из этого цикла бытия ");
+        System.out.println("7) Обновить план ");
+        System.out.println("8) Обновить все планы в папке ");
+        System.out.println("exit (9) - Выход из этого цикла бытия ");
         System.out.print("Введите действие : ");
         action = in.nextInt();
         switch (action) {
@@ -85,31 +88,41 @@ public class Main {
                 ShowFilesInFolder(path);
                 String folder = path;
                 while(!exit) {
-                    System.out.println("1) Удалить файл");
-                    System.out.println("2) Добавить файл");
-                    System.out.println("3) Выйти из папки файл");
+                    System.out.println("1) Добавить файл ");
+                    System.out.println("2) Удалить файл ");
+                    System.out.println("3) Обновить файл ");
+                    System.out.println("4) Выйти из папки файл");
                     action = in.nextInt();
+                    System.out.println("Укажите файл : ");
+                    path = in.next();
+                    String file = folder + "/" + path;
                     if (action == 1) {
-                        System.out.println("Укажите файл : ");
-                        path = in.next();
-                        new ThreadParse(folder + "/" + path).run();
+                        new ThreadParse(file).run();
                     } else if (action == 2) {
-                        System.out.println("Укажите файл : ");
-                        path = in.next();
-                        new ThreadDelete(folder + "/" + path).run();
-                    } else {
+                        new ThreadDelete(file).run();
+                    } else if (action == 3) {
+                        new ThreadUpdate(file).run();
+                    }else {
                         exit = true;
                     }
                 }
                 exit = false;
                 break;
             case 7:
+                System.out.println("Укажите путь к папке : ");
+                path = in.next();
+                DeleteFolder(path);
+                break;
+            case 8:
+                System.out.println("MOLODIEZ");
+                break;
+            case 9:
                 exit = true;
 
         }
     }
 
-    public void ShowFilesInFolder(String folder){
+    private void ShowFilesInFolder(String folder){
         File Folder = new File(folder);
         for (File file : Objects.requireNonNull(Folder.listFiles())) {
             System.out.println(file.getName());
@@ -147,6 +160,26 @@ public class Main {
         for (File file : Objects.requireNonNull(Folder.listFiles())) {
             try {
                 executeIt.execute(new ThreadDelete(folder + "/" + file.getName()));
+            } catch (Exception e) {
+                log.error(e.getLocalizedMessage());
+            }
+        }
+        executeIt.shutdown();
+        try {
+            executeIt.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        }catch (InterruptedException e){
+            log.error(e.getLocalizedMessage());
+        }
+
+    }
+
+    private void UpdateFolder(String folder) {
+
+        ExecutorService executeIt = Executors.newFixedThreadPool(5);
+        File Folder = new File(folder);
+        for (File file : Objects.requireNonNull(Folder.listFiles())) {
+            try {
+                executeIt.execute(new ThreadUpdate(folder + "/" + file.getName()));
             } catch (Exception e) {
                 log.error(e.getLocalizedMessage());
             }

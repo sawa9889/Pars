@@ -1,6 +1,7 @@
 package Parse;
 
 import Src.Discipline;
+import Threads.ThreadParse;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -59,7 +60,7 @@ public class Plan extends General{
     ArrayList<String> Hours = new ArrayList<String>();
     ArrayList<String> Kaf = new ArrayList<String>();
     ArrayList<String> Stroka;
-
+    Logger log = Logger.getLogger(ThreadParse.class);
     public Plan(){}
 
     public ArrayList<Discipline> parse(String fileName) throws SQLException {
@@ -135,12 +136,14 @@ public class Plan extends General{
 
 
     public void Display(ArrayList<ArrayList<String>> indexes) {
+
         System.out.println();
         for (int i =0;i<indexes.size();i++){
+            String str = "";
             for (int j =0;j<indexes.get(i).size();j++){
-                System.out.print(indexes.get(i).get(j)+" ");
+               str+=(indexes.get(i).get(j)+" ");
             }
-            System.out.println();
+            log.info(str);
         }
     }
 

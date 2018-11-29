@@ -1,5 +1,7 @@
 package Src;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 
 public class Discipline {
@@ -10,7 +12,7 @@ public class Discipline {
     private ArrayList<Hours> hours = new ArrayList<>();
 
     public Discipline(ArrayList<ArrayList<String>> rawData) {
-        disciplineName = rawData.get(0).get(0)+' '+rawData.get(0).get(1);
+        disciplineName = rawData.get(0).get(1).trim();
         depNumber = (int) Double.parseDouble(rawData.get(rawData.size()-1).get(0).replace("Номер кафедры", "").trim());
         depName = rawData.get(rawData.size()-1).get(1);
         for (int i = 3; i < rawData.size()-1; i++) {
