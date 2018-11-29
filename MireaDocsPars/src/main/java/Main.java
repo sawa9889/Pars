@@ -93,14 +93,18 @@ public class Main {
                     System.out.println("3) Обновить файл ");
                     System.out.println("4) Выйти из папки файл");
                     action = in.nextInt();
-                    System.out.println("Укажите файл : ");
-                    path = in.next();
                     String file = folder + "/" + path;
                     if (action == 1) {
+                        System.out.println("Укажите файл : ");
+                        path = in.next();
                         new ThreadParse(file).run();
                     } else if (action == 2) {
+                        System.out.println("Укажите файл : ");
+                        path = in.next();
                         new ThreadDelete(file).run();
                     } else if (action == 3) {
+                        System.out.println("Укажите файл : ");
+                        path = in.next();
                         new ThreadUpdate(file).run();
                     }else {
                         exit = true;
@@ -124,8 +128,13 @@ public class Main {
 
     private void ShowFilesInFolder(String folder){
         File Folder = new File(folder);
-        for (File file : Objects.requireNonNull(Folder.listFiles())) {
-            System.out.println(file.getName());
+        try {
+            for (File file : Objects.requireNonNull(Folder.listFiles())) {
+                System.out.println(file.getName());
+            }
+        }catch (NullPointerException e){
+            System.out.println("Папка не найдена");
+            log.error(e.getLocalizedMessage());
         }
     }
 

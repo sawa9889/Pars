@@ -28,6 +28,8 @@ public class ThreadDelete implements Runnable{
         } catch (SQLException e) {
             log.error(e.getLocalizedMessage());
             System.out.println("Файл не найден");
+        }catch (Exception e){
+            log.error(e.getLocalizedMessage());
         }
     }
 }

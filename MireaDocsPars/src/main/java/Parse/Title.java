@@ -72,7 +72,8 @@ public class Title extends General
                     case 17:
                         if (j==2){
                             String name = get(cell);
-                            Direct.add(name.substring(name.lastIndexOf(Direct.get(0))==-1? 0:name.lastIndexOf(Direct.get(0))));
+                            Direct.add(name.substring(name.lastIndexOf(Direct.get(0))==-1? 0:name.lastIndexOf(Direct.get(0))+Direct.get(0).length()));
+                            log.info(Direct.get(1));
                             indexes.add(Direct);
                         }
                         break;
