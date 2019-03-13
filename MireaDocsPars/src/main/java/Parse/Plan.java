@@ -16,35 +16,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Plan extends General{
+public class Plan extends General {
 
     private HashMap<Integer,String> HOURS_TOTAL_INDEXES= new HashMap<Integer, String>() {{
-        put(10,"По ЗЕТ ");
-        put(12," Часов в з.е. ");
-        put(13," Итог: экспертное  ");
-        put(15," Контакт часы ");
-        put(16," СР ");
-        put(17," Контроль ");
+        put(12," По ЗЕТ ");
+        put(13," Часов в з.е. ");
+        put(21," Итог: экспертное ");
+        put(14," Контакт часы ");
+        put(19," СР ");
+        put(20," Контроль ");
     }};
 
     private HashMap<Integer,String>  EXAMS_INDEXES = new HashMap<Integer, String>() {{
-        put(4,"Экзамены :");
-        put(5,"Зачеты :");
-        put(6,"Зачеты с оценкой :");
-        put(7,"Курсовые проекты :");
-        put(8,"Курсовые работы :");
-        put(9,"Реферат :");
+        put(6,"Экзамены :");
+        put(7,"Зачеты :");
+        put(8,"Зачеты с оценкой :");
+        put(9,"Курсовые проекты :");
+        put(10,"Курсовые работы :");
+        put(11,"Реферат :");
     }};
 
     private HashMap<Integer,String>  HOURS_PLAN_INDEXES = new HashMap<Integer, String>() {{
-        put(26,"1 семестр");
-        put(34,"2 семестр");
-        put(45,"3 семестр");
-        put(53,"4 семестр");
-        put(64,"5 семестр");
-        put(72,"6 семестр");
-        put(83,"7 семестр");
-        put(91,"8 семестр");
+        put(27,"1 семестр");
+        put(35,"2 семестр");
+        put(46,"3 семестр");
+        put(54,"4 семестр");
+        put(65,"5 семестр");
+        put(73,"6 семестр");
+        put(84,"7 семестр");
+        put(92,"8 семестр");
     }};
     private Integer HOURS_PLAN_SIZE = 7;
 
@@ -113,6 +113,7 @@ public class Plan extends General{
                     indexes.add(Exams);
                     for (Integer i : HOURS_TOTAL_INDEXES.keySet())
                         Hours_total.add(HOURS_TOTAL_INDEXES.get(i) + Stroka.get(i));
+
                     indexes.add(Hours_total);
 
                     for (Integer i : HOURS_PLAN_INDEXES.keySet())
@@ -123,7 +124,7 @@ public class Plan extends General{
                     indexes.add(Kaf);
 
                     if (bool1 && !(Kaf.get(0).contains(" 0.0") && Kaf.get(1).contains(" 0.0"))) {
-                        //Display(indexes);
+                        Display(indexes);
                         discArrList.add(new Discipline(indexes));
 //                        System.out.println('b');
                     }
@@ -143,7 +144,7 @@ public class Plan extends General{
             for (int j =0;j<indexes.get(i).size();j++){
                str+=(indexes.get(i).get(j)+" ");
             }
-            log.info(str);
+            System.out.println(str);
         }
     }
 

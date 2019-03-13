@@ -21,7 +21,7 @@ public class ThreadParse implements Runnable {
         Logger log = Logger.getLogger(ThreadParse.class);
         DataSourceSample mireaDB = new DataSourceSample();
         try {
-            log.info("Батя в парере " + path);
+            log.info("Батя в парсере " + path);
             ArrayList<Discipline> processedDisciplineArray
                     = new Plan().parse(path);
             log.info("Бэнг (План) " + path);

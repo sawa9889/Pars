@@ -13,10 +13,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Competence extends General{
+import static sun.java2d.loops.CompositeType.General;
+
+public class Competence extends General {
 
     public ArrayList<Src.Competence> parse(String fileName) throws SQLException {
-        Logger log = Logger.getLogger(Plan.class);
+        Logger log = Logger.getLogger(Parse.Plan.class);
         //инициализируем потоки
         Integer i = 0;
         Integer j = 0;

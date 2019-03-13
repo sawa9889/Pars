@@ -1,17 +1,9 @@
-import DAO.DataSourceSample;
-import Parse.Title;
-import Parse.Competence;
-import Parse.Plan;
-import Src.Discipline;
-import Src.EducationPlan;
 import Threads.ThreadDelete;
 import Threads.ThreadParse;
 import Threads.ThreadUpdate;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;

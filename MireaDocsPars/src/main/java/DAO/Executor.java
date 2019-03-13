@@ -11,7 +11,7 @@ import java.sql.*;
 
 public class Executor {
 
-    public Integer addEducationPlan (OracleConnection connection, EducationPlan educationPlan, Integer profId) throws SQLException {
+    Integer addEducationPlan (OracleConnection connection, EducationPlan educationPlan, Integer profId) throws SQLException {
         final String addEdPlanString = "call mirea_docs.mirea_pars_pack.add_ed_plan(?, ?, ?, ?, ?, ?, ?)";
         CallableStatement addEdPlanCall = connection.prepareCall(addEdPlanString);
         addEdPlanCall.setString("in_ed_plan_name", educationPlan.getName());
@@ -27,7 +27,7 @@ public class Executor {
         return edPlanid;
     }
 
-    public Integer addCompetence (OracleConnection connection, Competence competence) throws SQLException {
+    Integer addCompetence (OracleConnection connection, Competence competence) throws SQLException {
         final String addCompString = "call mirea_docs.mirea_pars_pack.add_competence(?, ?, ?)";
         CallableStatement addCompCall = connection.prepareCall(addCompString);
         addCompCall.setString("in_comp_name", competence.getCompetenceName());
@@ -40,10 +40,15 @@ public class Executor {
 
     }
 
-    public Integer addDiscipline (OracleConnection connection, Discipline discipline) throws SQLException {
-        final String addDisc = "call mirea_docs.mirea_pars_pack.add_discipline(?, ?)";
+    Integer addDiscipline (OracleConnection connection, Discipline discipline) throws SQLException {
+        final String addDisc = "call mirea_docs.mirea_pars_pack.add_discipline(?, ?, ?)";
         CallableStatement addDiscCall = connection.prepareCall(addDisc);
         addDiscCall.setString("in_disc_name", discipline.getDisciplineName());
+        if (discipline.getDisciplineId() !=null) {
+            addDiscCall.setInt("in_disc_id", discipline.getDisciplineId());
+        } else {
+            addDiscCall.setNull("in_disc_id", Types.NULL);
+        }
         addDiscCall.registerOutParameter("out_disc_id", Types.INTEGER);
         addDiscCall.execute();
         int discId = addDiscCall.getInt("out_disc_id");
@@ -51,7 +56,21 @@ public class Executor {
         return discId;
     }
 
-    public Integer addHours (OracleConnection connection, Hours hours) throws SQLException {
+    void addSummaryHours(OracleConnection connection, Discipline discipline, Integer discId) throws SQLException {
+        final String addSummaryHours = "call mirea_docs.mirea_pars_pack.add_summary_hours(?, ?, ?, ?, ?, ?, ?)";
+        CallableStatement addSummaryHoursCall = connection.prepareCall(addSummaryHours);
+        addSummaryHoursCall.setInt("in_disc_id", discId);
+        addSummaryHoursCall.setInt("in_SR", discipline.getSR());
+        addSummaryHoursCall.setInt("in_control", discipline.getControl());
+        addSummaryHoursCall.setInt("in_withZET", discipline.getWithZET());
+        addSummaryHoursCall.setInt("in_hoursInZE", discipline.getHoursInZE());
+        addSummaryHoursCall.setInt("in_hoursExpert", discipline.getHoursExpert());
+        addSummaryHoursCall.setInt("in_hoursContact", discipline.getHoursContact());
+        addSummaryHoursCall.execute();
+        addSummaryHoursCall.close();
+    }
+
+    Integer addHours (OracleConnection connection, Hours hours) throws SQLException {
         final String addHours = "call mirea_docs.mirea_pars_pack.add_hours(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         CallableStatement addHoursCall = connection.prepareCall(addHours);
         addHoursCall.setInt("in_hours_semestr", hours.getSemestr());
@@ -71,7 +90,7 @@ public class Executor {
 
     }
 
-    public void addDirection (OracleConnection connection, EducationPlan educationPlan) throws SQLException {
+    void addDirection (OracleConnection connection, EducationPlan educationPlan) throws SQLException {
         final String addDir = "call mirea_docs.mirea_pars_pack.add_direction(?, ?)";
         CallableStatement addDirCall = connection.prepareCall(addDir);
         addDirCall.setString("in_dir_encryption", educationPlan.getDirEncr());
@@ -80,7 +99,7 @@ public class Executor {
         addDirCall.close();
     }
 
-    public void addStandart (OracleConnection connection, EducationPlan educationPlan) throws SQLException {
+    void addStandart (OracleConnection connection, EducationPlan educationPlan) throws SQLException {
         final String addStandart = "call mirea_docs.mirea_pars_pack.add_standart(?, ?, ?, ?)";
         CallableStatement addStandartCall = connection.prepareCall(addStandart);
         addStandartCall.setInt("in_st_ext_id", educationPlan.getStandartId());
@@ -91,7 +110,7 @@ public class Executor {
         addStandartCall.close();
     }
 
-    public Integer addProfile (OracleConnection connection, EducationPlan educationPlan) throws SQLException {
+    Integer addProfile (OracleConnection connection, EducationPlan educationPlan) throws SQLException {
         final String addProfile = "call mirea_docs.mirea_pars_pack.add_profile(?, ?, ?)";
         CallableStatement addProfileCall = connection.prepareCall(addProfile);
         addProfileCall.setString("in_prof_name", educationPlan.getProfName());
@@ -103,7 +122,7 @@ public class Executor {
         return profileId;
     }
 
-    public Integer addDepartment (OracleConnection connection, Discipline discipline) throws SQLException {
+    Integer addDepartment (OracleConnection connection, Discipline discipline) throws SQLException {
         final  String addDepartment = "call mirea_docs.mirea_pars_pack.add_department(?, ?, ?)";
         CallableStatement addDepCall = connection.prepareCall(addDepartment);
         addDepCall.setString("in_dep_name", discipline.getDepName());
@@ -115,7 +134,7 @@ public class Executor {
         return depId;
     }
 /* Поддержка связей таблиц*/
-    public void addPlan2Comp (OracleConnection connection, int planId, int compId) throws SQLException {
+    void addPlan2Comp (OracleConnection connection, int planId, int compId) throws SQLException {
         final  String addPlan2Comp = "call mirea_docs.mirea_pars_pack.add_educ_plan2competence(?, ?)";
         CallableStatement addPlan2CompCall = connection.prepareCall(addPlan2Comp);
         addPlan2CompCall.setInt("in_ed_plan_id", planId);
@@ -123,7 +142,7 @@ public class Executor {
         addPlan2CompCall.execute();
         addPlan2CompCall.close();
     }
-    public void addDisc2Comp (OracleConnection connection, int discId, int compId, String discCompKey) throws SQLException {
+    void addDisc2Comp (OracleConnection connection, int discId, int compId, String discCompKey) throws SQLException {
         final  String addDisc2Comp = "call mirea_docs.mirea_pars_pack.add_discipline2comp(?, ?, ?)";
         CallableStatement addDisc2CompCall = connection.prepareCall(addDisc2Comp);
         addDisc2CompCall.setInt("in_disc_id", discId);
@@ -132,7 +151,7 @@ public class Executor {
         addDisc2CompCall.execute();
         addDisc2CompCall.close();
     }
-    public void addDep2Disc (OracleConnection connection, int depId, int discId) throws SQLException {
+    void addDep2Disc (OracleConnection connection, int depId, int discId) throws SQLException {
         final  String addDep2Disc = "call mirea_docs.mirea_pars_pack.add_dep2discipline(?, ?)";
         CallableStatement addDep2DiscCall = connection.prepareCall(addDep2Disc);
         addDep2DiscCall.setInt("in_disc_id", discId);
@@ -140,7 +159,7 @@ public class Executor {
         addDep2DiscCall.execute();
         addDep2DiscCall.close();
     }
-    public void addPlan2Disc (OracleConnection connection, int planId, int discId) throws SQLException {
+    void addPlan2Disc (OracleConnection connection, int planId, int discId) throws SQLException {
         final  String addPlan2Disc = "call mirea_docs.mirea_pars_pack.add_educ_plan2disc(?, ?)";
         CallableStatement addPlan2DiscCall = connection.prepareCall(addPlan2Disc);
         addPlan2DiscCall.setInt("in_plan_id", planId);
@@ -148,7 +167,7 @@ public class Executor {
         addPlan2DiscCall.execute();
         addPlan2DiscCall.close();
     }
-    public void addHours2Comp (OracleConnection connection, int hoursId, int compId) throws SQLException {
+    void addHours2Comp (OracleConnection connection, int hoursId, int compId) throws SQLException {
         final  String addHours2Comp = "call mirea_docs.mirea_pars_pack.add_hours2competence(?, ?)";
         CallableStatement addHours2CompCall = connection.prepareCall(addHours2Comp);
         addHours2CompCall.setInt("in_hours_id", hoursId);
@@ -156,7 +175,7 @@ public class Executor {
         addHours2CompCall.execute();
         addHours2CompCall.close();
     }
-    public void addHours2Disc (OracleConnection connection, int hoursId, int discId) throws SQLException {
+    void addHours2Disc (OracleConnection connection, int hoursId, int discId) throws SQLException {
         final  String addHours2Disc = "call mirea_docs.mirea_pars_pack.add_hours2discipline(?, ?)";
         CallableStatement addHours2DiscCall = connection.prepareCall(addHours2Disc);
         addHours2DiscCall.setInt("in_hours_id", hoursId);
@@ -170,7 +189,6 @@ public class Executor {
         deleteEdPlanCall.setString("in_ed_plan_name", edPlanName);
         deleteEdPlanCall.execute();
         deleteEdPlanCall.close();
-
     }
 
 

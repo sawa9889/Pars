@@ -1,4 +1,4 @@
-package Parse;
+package New_Parse;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Competence extends General{
+public class Competence extends General {
     public String parse(String fileName) {
         //инициализируем потоки
         Integer i = 0;

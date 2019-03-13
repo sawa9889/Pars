@@ -38,53 +38,54 @@ public abstract class General {
         return result.equals("")? "0":result;
     }
 
-//    public static String parse(String fileName, int shet) {
-//        //инициализируем потоки
-//        Integer i = 0;
-//        Integer j = 0;
-//        boolean bool = false;
-//
-//        String result = "";
-//        InputStream inputStream = null;
-//        HSSFWorkbook workBook = null;
-//        try {
-//            inputStream = new FileInputStream(fileName);
-//            workBook = new HSSFWorkbook(inputStream);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Sheet sheet = workBook.getSheetAt(shet);
-//        Iterator<Row> it = sheet.iterator();
-//        while (it.hasNext()) {
-//            Row row = it.next();
-//            Iterator<Cell> cells = row.iterator();
-//            i++;
-//            result += i+"\n";
-//            j=0;
-//            while (cells.hasNext()) {
-//                Cell cell = cells.next();
-//                int cellType = cell.getCellType();
-//                j++;
-//                //перебираем возможные типы ячеек
-//                switch (cellType) {
-//                    case Cell.CELL_TYPE_STRING:
-//                        result += j+" := "+cell.getStringCellValue() + "=";
-//                        break;
-//                    case Cell.CELL_TYPE_NUMERIC:
-//                        result +=  j+" := "+"[" + cell.getNumericCellValue() + "]";
-//                        break;
-//
-//                    case Cell.CELL_TYPE_FORMULA:
-//                        result +=  j+" := "+"[" + cell.getNumericCellValue() + "]";
-//                        break;
-//                    default:
-//                        result +=  j+" := "+"|";
-//                        break;
-//                }
-//            }
-//            result += "\n";
-//        }
-//        return result;
-//    }
+    public static String parse_base(String fileName, int shet) {
+        //инициализируем потоки
+        Integer i = 0;
+        Integer j = 0;
+        boolean bool = false;
+
+        String result = "";
+        InputStream inputStream = null;
+        HSSFWorkbook workBook = null;
+        try {
+            inputStream = new FileInputStream(fileName);
+            workBook = new HSSFWorkbook(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Sheet sheet = workBook.getSheetAt(shet);
+        Iterator<Row> it = sheet.iterator();
+        while (it.hasNext()) {
+            Row row = it.next();
+            Iterator<Cell> cells = row.iterator();
+            i++;
+            result += i+"\n";
+            j=0;
+            while (cells.hasNext()) {
+                Cell cell = cells.next();
+                int cellType = cell.getCellType();
+                j++;
+                //перебираем возможные типы ячеек
+                switch (cellType) {
+                    case Cell.CELL_TYPE_STRING:
+                        result += j+" := "+cell.getStringCellValue() + "=";
+                        break;
+                    case Cell.CELL_TYPE_NUMERIC:
+                        result +=  j+" := "+"[" + cell.getNumericCellValue() + "]";
+                        break;
+
+                    case Cell.CELL_TYPE_FORMULA:
+                        result +=  j+" := "+"[" + cell.getNumericCellValue() + "]";
+                        break;
+                    default:
+                        result +=  j+" := "+"|";
+                        break;
+                }
+            }
+            result += "\n";
+        }
+        System.out.println(result);
+        return result;
+    }
 }

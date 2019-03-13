@@ -11,19 +11,29 @@ public class Discipline {
     private String depName;
     private ArrayList<Hours> hours = new ArrayList<>();
 
+    private Integer SR, control, withZET;
+    private Integer hoursInZE, hoursExpert, hoursContact;
+
     public Discipline(ArrayList<ArrayList<String>> rawData) {
         disciplineName = rawData.get(0).get(1).trim();
         depNumber = (int) Double.parseDouble(rawData.get(rawData.size()-1).get(0).replace("Номер кафедры", "").trim());
         depName = rawData.get(rawData.size()-1).get(1);
+        SR = (int) Double.parseDouble(rawData.get(2).get(0).trim().split(" ")[1]);
+        control = (int) Double.parseDouble(getValueForHour(rawData.get(2),"Контроль "));
+        withZET = (int) Double.parseDouble(getValueForHour(rawData.get(2),"По ЗЕТ "));
+        hoursInZE = (int) Double.parseDouble(getValueForHour(rawData.get(2),"Часов в з.е. "));
+        hoursExpert = (int) Double.parseDouble(getValueForHour(rawData.get(2),"Итог: экспертное "));
+        hoursContact = (int) Double.parseDouble(getValueForHour(rawData.get(2),"Контакт часы "));
         for (int i = 3; i < rawData.size()-1; i++) {
             boolean isExam = rawData.get(i).get(0).toLowerCase().contains("экзамен");
-            hours.add(new Hours(i-2,
+            hours.add(new Hours(Integer.parseInt(rawData.get(i).get(0).substring(0,1)),
                     (int) Double.parseDouble(rawData.get(i).get(2)),(int) Double.parseDouble(rawData.get(i).get(3)),
                     (int) Double.parseDouble(rawData.get(i).get(4)),(int) Double.parseDouble(rawData.get(i).get(5)),
                     (int) Double.parseDouble(rawData.get(i).get(6)),(int) Double.parseDouble(rawData.get(i).get(7)),
                     //или экзамен, или зачет
                     isExam, !isExam));
         }
+        System.out.println("Закончил "+disciplineName);
     }
 
     public void Display(){
@@ -40,6 +50,40 @@ public class Discipline {
                     h.isEcz() + " , " +
                     h.isZachet());
         }
+    }
+
+    private String getValueForHour(ArrayList<String> rawData,String toFind){
+        for (String s: rawData) {
+            if (s.contains(toFind)){
+                return s.trim().replace(toFind, "");
+            }
+        }
+        return "0.0";
+    }
+
+
+    public Integer getSR() {
+        return SR;
+    }
+
+    public Integer getControl() {
+        return control;
+    }
+
+    public Integer getWithZET() {
+        return withZET;
+    }
+
+    public Integer getHoursInZE() {
+        return hoursInZE;
+    }
+
+    public Integer getHoursExpert() {
+        return hoursExpert;
+    }
+
+    public Integer getHoursContact() {
+        return hoursContact;
     }
 
     public Integer getDepNumber() {

@@ -97,7 +97,7 @@ public class DataSourceSample {
         /* Строгий сценарий добавления данных в таблицы */
         try {
             Logger log = Logger.getLogger(Discipline.class);
-            Integer profileId, edPlanId, compId, discId, depId, hoursId;
+            int profileId, edPlanId, compId, discId, depId, hoursId;
             ex.addDirection(connection, processedEdPlan);
             profileId = ex.addProfile(connection, processedEdPlan);
             ex.addStandart(connection, processedEdPlan);
@@ -108,16 +108,25 @@ public class DataSourceSample {
                 for (CompetenceDictionary competenceDictionary : competence.getCompetenceDictArr()) {
                     for (Src.Discipline discipline : processedDisciplineArray) {
                         if (discipline.getDisciplineName().equals(competenceDictionary.getDictionaryName())) {
-                            discId = ex.addDiscipline(connection, discipline);
-                            depId = ex.addDepartment(connection, discipline);
-                            ex.addDep2Disc(connection, depId, discId);
-                            ex.addDisc2Comp(connection, discId, compId, competenceDictionary.getDictionaryId());
-                            ex.addPlan2Disc(connection, edPlanId, discId);
-                            for (Src.Hours hour : discipline.getHours()) {
-                                hoursId = ex.addHours(connection, hour);
-                                ex.addHours2Disc(connection, hoursId, discId);
-                                ex.addHours2Comp(connection, hoursId, compId);
+                            if (discipline.getDisciplineId() == null) {
+                                discId = ex.addDiscipline(connection, discipline);
+                                discipline.setDisciplineId(discId);
+                                depId = ex.addDepartment(connection, discipline);
+                                ex.addDep2Disc(connection, depId, discipline.getDisciplineId());
+                                ex.addPlan2Disc(connection, edPlanId, discipline.getDisciplineId());
+                                for (Src.Hours hour : discipline.getHours()) {
+                                    hoursId = ex.addHours(connection, hour);
+                                    ex.addHours2Disc(connection, hoursId, discipline.getDisciplineId());
+                                    ex.addHours2Comp(connection, hoursId, compId);
+                                    ex.addSummaryHours(connection, discipline, discipline.getDisciplineId());
 
+                                }
+                            }
+                            try {
+                                ex.addDisc2Comp(connection, discipline.getDisciplineId(), compId, competenceDictionary.getDictionaryId());
+                            } catch (Exception ee) {
+                                System.out.println(discipline.getDisciplineId() + " " + competence.getCompetenceName()
+                                + " " + discipline.getDisciplineName() + " ");
                             }
                         }
                     }
