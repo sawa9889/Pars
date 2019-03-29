@@ -45,9 +45,7 @@ public class Main {
         System.out.println("4) Удалить планы в папке из базы");
         System.out.println("5) Сказать что вы молодец ");
         System.out.println("6) Посмотреть файлы в папке ");
-        System.out.println("7) Обновить план ");
-        System.out.println("8) Обновить все планы в папке ");
-        System.out.println("exit (9) - Выход из этого цикла бытия ");
+        System.out.println("exit - Выход из этого цикла бытия ");
         System.out.print("Введите действие : ");
         action = in.nextInt();
         switch (action) {
@@ -104,15 +102,7 @@ public class Main {
                 }
                 exit = false;
                 break;
-            case 7:
-                System.out.println("Укажите путь к папке : ");
-                path = in.next();
-                DeleteFolder(path);
-                break;
-            case 8:
-                System.out.println("MOLODIEZ");
-                break;
-            case 9:
+            default:
                 exit = true;
 
         }

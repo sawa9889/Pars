@@ -20,7 +20,37 @@ public class EducationPlan {
     private String dirName;
     //профиль
     private String profName;
+    //Какие-то новые строки
+    private String Kafedra;
+    private String KafedraName;
+    private String Kvalification;
+    private String ProdTraining;
+    private String TypeOfEducation;
+    private String Years;
 
+    public String getKafedra() {
+        return Kafedra;
+    }
+
+    public String getKafedraName() {
+        return KafedraName;
+    }
+
+    public String getKvalification() {
+        return Kvalification;
+    }
+
+    public String getProdTraining() {
+        return ProdTraining;
+    }
+
+    public String getTypeOfEducation() {
+        return TypeOfEducation;
+    }
+
+    public String getYears() {
+        return Years;
+    }
 
     public String getName() {
         return name;
@@ -94,6 +124,13 @@ public class EducationPlan {
 
         profName = rawData.get(1).get(0).replaceAll("\"", "").trim();
 
+
+        Kafedra = rawData.get(4).get(0);
+        KafedraName = rawData.get(4).get(1);
+        Kvalification = rawData.get(4).get(2);
+        ProdTraining = rawData.get(4).get(3);
+        TypeOfEducation = rawData.get(4).get(4);
+        Years = rawData.get(4).get(5);
     }
 
 }
